@@ -1,4 +1,4 @@
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import Table from "../components/Table.tsx";
 import {Accessor, Rule} from "../types/types.ts";
 import {columns, DRAGGABLE, EDIT_OR_DELETE} from "../data/util.tsx";
@@ -12,87 +12,12 @@ import {
   addNewRule,
   cancelEditingRule,
   deleteRule,
-  editRule,
+  changeRuleEditState,
   setEditedRuleSetState,
-  updateRuleSetName
+  updateRuleSetName, saveEditedChanges, resetEditedState
 } from "../store/slice.ts";
 import EditableRuleRow from "../components/EditableRuleRow.tsx";
 
-
-// function renderRuleSetForm(rowIndex, rowId) {
-//   return (
-//     <tr key={rowId}>
-//       <td className="p-4 whitespace-nowrap text-sm text-gray-900">
-//         <div className='cursor-grab' onClick={() => console.log('edit works!')}>
-//           <Squares2X2Icon className='h-3 w-3 text-neutral-300'/>
-//         </div>
-//       </td>
-//
-//       <td className="p-4 whitespace-nowrap text-sm text-gray-900">
-//         {rowIndex + 1}
-//       </td>
-//
-//       <td className="p-4 whitespace-nowrap text-sm text-gray-900">
-//         <input
-//           className="w-full px-4 py-2 border border-neutral-200 rounded-md focus:outline-none max-w-64"
-//           placeholder='Enter measuremet name'
-//         />
-//       </td>
-//
-//       <td className="p-4 whitespace-nowrap text-sm text-gray-900">
-//         <div className='text-neutral-800 border border-neutral-200 rounded-md w-24'>
-//           <select className='px-4 py-2 border-r-4 border-transparent focus:outline-none'>
-//             <option>Is</option>
-//             <option>{'>='}</option>
-//             <option>{`<`}</option>
-//           </select>
-//         </div>
-//       </td>
-//
-//       <td className="flex items-center p-4 whitespace-nowrap text-sm text-gray-900">
-//         <input
-//           className="w-full px-4 py-2 border border-neutral-200 rounded-l-md focus:outline-none max-w-64"
-//           placeholder='check if not present'
-//         />
-//
-//         <div className='text-neutral-800 border border-neutral-200 rounded-r-md w-24'>
-//           <select className='px-4 py-[9px] border-r-4 border-transparent focus:outline-none'>
-//             <option>Is</option>
-//             <option>{'>='}</option>
-//             <option>{`<`}</option>
-//           </select>
-//         </div>
-//       </td>
-//
-//       <td className="p-4 whitespace-nowrap text-sm text-gray-900">
-//         <input
-//           className="w-full px-4 py-2 border border-neutral-200 rounded-md focus:outline-none max-w-64"
-//           placeholder='Enter Findings name'
-//         />
-//       </td>
-//
-//       <td className="p-4 whitespace-nowrap text-sm text-gray-900">
-//         <div className='text-neutral-800 border border-neutral-200 rounded-md w-24'>
-//           <select className='px-4 py-2 border-r-4 border-transparent focus:outline-none'>
-//             <option>Is</option>
-//             <option>{'>='}</option>
-//             <option>{`<`}</option>
-//           </select>
-//         </div>
-//       </td>
-//
-//       <td className="p-4 whitespace-nowrap text-sm text-gray-900">
-//         <div className='flex items-center gap-x-2'>
-//           <div className='cursor-pointer' onClick={() => console.log('edit works!')}>
-//             <CheckIcon className='h-4 w-4'/></div>
-//           <div className='cursor-pointer' onClick={() => console.log('delete works!')}>
-//             <XMarkIcon className='h-4 w-4'/>
-//           </div>
-//         </div>
-//       </td>
-//     </tr>
-//   )
-// }
 
 function renderRuleSetForm(rowIndex, rowId) {
   return <EditableRuleRow rowIndex={rowIndex} rowId={rowId}/>
@@ -105,20 +30,22 @@ function EditMode() {
   const editedRuleState = useSelector((state) => state.rules.editedRuleSetState);
   const stateEdited = useSelector((state) => state.rules.editedRuleSetState.stateEdited);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
 
   const {id} = useParams();
   const ruleId = parseInt(id);
   let ruleSet = ruleId ? rulesSet.find((rule) => rule.id === ruleId) : selectedRule;
 
-  // const [ruleSetName, setRuleSetName] = useState<string>(ruleSet.name);
-  // const [isRuleSetEdited, setIsRuleSetEdited] = useState(false);
-
 
   useEffect(() => {
     const editedRuleSet = {...ruleSet};
     editedRuleSet.rules = editedRuleSet?.rules?.map((rule) => ({...rule, isInEditState: false}));
     dispatch(setEditedRuleSetState(editedRuleSet));
+
+    return (() => {
+      dispatch(resetEditedState())
+    })
   }, []);
 
 
@@ -137,7 +64,8 @@ function EditMode() {
       Header: '',
       render: (row) => (
         <div className='flex items-center gap-x-2'>
-          <div className='cursor-pointer' onClick={() => dispatch(editRule(row))}><PencilIcon className='h-4 w-4'/>
+          <div className='cursor-pointer' onClick={() => dispatch(changeRuleEditState(row))}><PencilIcon
+            className='h-4 w-4'/>
           </div>
           <div className='cursor-pointer' onClick={() => dispatch(deleteRule(row))}><TrashIcon className='h-4 w-4'/>
           </div>
@@ -148,6 +76,11 @@ function EditMode() {
 
   function handleInputChange(e) {
     dispatch(updateRuleSetName(e.target.value))
+  }
+
+  function handleSaveChanges () {
+    dispatch(saveEditedChanges(editedRuleState?.ruleSet))
+    navigate('/rules?ruleUpdate=success');
   }
 
   function handleAddNewRule() {
@@ -177,7 +110,7 @@ function EditMode() {
           />
 
           <button
-            // onClick={handleCopyRuleset}
+            onClick={handleSaveChanges}
             className="w-full bg-sky-500 text-sky-100 px-4 py-2 rounded hover:bg-sky-600 shrink-0 sm:w-fit sm:mr-8"
           >
             Save Changes

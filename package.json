@@ -13,6 +13,7 @@
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.4",
     "@radix-ui/react-dropdown-menu": "^2.1.4",
+    "@radix-ui/react-select": "^2.1.4",
     "@reduxjs/toolkit": "^2.5.0",
     "@types/react-router": "^5.1.20",
     "heroicons": "^2.2.0",

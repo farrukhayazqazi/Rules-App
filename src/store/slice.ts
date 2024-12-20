@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import data from '../data/rule_sets.json';
-import {Rule, RuleSetItem} from "../types/types.ts";
+import {EditableRule, EditableRuleSetItem, Rule, RuleSetItem} from "../types/types.ts";
 import {nanoid} from 'nanoid'
 
 const rulesSlice = createSlice({
@@ -49,23 +49,30 @@ const rulesSlice = createSlice({
         action: '',
         isInEditState: true
       }
-      state.editedRuleSetState.ruleSet.rules = [...state.editedRuleSetState.ruleSet.rules, emptyRule]
+      state.editedRuleSetState.ruleSet.rules = state.editedRuleSetState.ruleSet.rules.length ?
+        [...state.editedRuleSetState.ruleSet.rules, emptyRule] : [emptyRule]
       state.editedRuleSetState.stateEdited = true;
     },
-    editRule(state, action: PayloadAction<Rule>) {
-      console.log('here inside editRule: ', action.payload);
+    changeRuleEditState(state, action: PayloadAction<EditableRule>) {
       const ruleIndex = state.editedRuleSetState.ruleSet.rules.findIndex((rule) => action.payload.id === rule.id);
       state.editedRuleSetState.ruleSet.rules[ruleIndex].isInEditState = true;
       state.editedRuleSetState.stateEdited = true;
     },
-    cancelEditingRule(state, action: PayloadAction<Rule>) {
+    cancelEditingRule(state, action: PayloadAction<EditableRule>) {
       const ruleIndex = state.editedRuleSetState.ruleSet.rules.findIndex((rule) => action.payload.id === rule.id);
+      console.log('state.editedRuleSetState.ruleSet.rules[ruleIndex]:::', state.editedRuleSetState.ruleSet.rules[ruleIndex])
       state.editedRuleSetState.ruleSet.rules[ruleIndex].isInEditState = false;
-      if(!action.payload.measurement) {
+      if (!action.payload.measurement) {
         state.editedRuleSetState.ruleSet.rules = state.editedRuleSetState.ruleSet.rules.filter((rule) => action.payload.id !== rule.id);
       }
     },
-    deleteRule(state, action: PayloadAction<Rule>) {
+    editRule(state, action: PayloadAction<EditableRule>) {
+      const ruleIndex = state.editedRuleSetState.ruleSet.rules.findIndex((rule) => action.payload.id === rule.id);
+      state.editedRuleSetState.ruleSet.rules[ruleIndex] = action.payload;
+      state.editedRuleSetState.ruleSet.rules[ruleIndex].isInEditState = false;
+      state.editedRuleSetState.stateEdited = true;
+    },
+    deleteRule(state, action: PayloadAction<EditableRule>) {
       state.editedRuleSetState.ruleSet.rules = state.editedRuleSetState.ruleSet.rules.filter((rule) => action.payload.id !== rule.id);
       state.editedRuleSetState.stateEdited = true;
     },
@@ -74,8 +81,20 @@ const rulesSlice = createSlice({
       if (!state.editedRuleSetState.stateEdited) {
         state.editedRuleSetState.stateEdited = true;
       }
+    },
+    saveEditedChanges(state, action: PayloadAction<EditableRuleSetItem>) {
+      console.log('here inside saveEditedChanges: ', action.payload);
+      const ruleSetItem = {...action.payload, rules: action.payload.rules.map(({isInEditableState, ...rest}) => rest)}
+      const index = state.rulesSet.findIndex((ruleSet) => ruleSet.id === ruleSetItem.id);
+      state.rulesSet[index] = ruleSetItem;
+      state.selectedRuleSet = ruleSetItem;
+    },
+    resetEditedState(state) {
+      state.editedRuleSetState.ruleSet = {id: 0, name: '', rules: []};
+      state.editedRuleSetState.stateEdited = false;
     }
-  }});
+  }
+});
 
 export const {
   updateSelectedRuleSet,
@@ -83,9 +102,12 @@ export const {
   copyRuleSet,
   setEditedRuleSetState,
   addNewRule,
-  editRule,
+  changeRuleEditState,
   cancelEditingRule,
   deleteRule,
-  updateRuleSetName
+  updateRuleSetName,
+  editRule,
+  saveEditedChanges,
+  resetEditedState
 } = rulesSlice.actions;
 export default rulesSlice.reducer;

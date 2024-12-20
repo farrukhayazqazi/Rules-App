@@ -16,5 +16,13 @@ export interface Rule {
   action: string;
 }
 
+export interface EditableRule extends Rule {
+  isInEditableState: Boolean;
+}
+
+export interface EditableRuleSetItem extends Omit<RuleSetItem, 'rules'> {
+  rules: EditableRule[]
+}
+
 export type Accessor = keyof Rule | DRAGGABLE | EDIT_OR_DELETE;
 
