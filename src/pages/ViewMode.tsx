@@ -4,7 +4,7 @@ import {useNavigate, useParams} from 'react-router';
 import {useDispatch, useSelector} from "react-redux";
 import {Rule, RuleSetItem} from "../types/types.ts";
 import {updateSelectedRuleSet, addNewRuleSet, copyRuleSet} from "../store/slice.ts";
-import {columns} from "../data/util.ts";
+import {columns} from "../data/util.tsx";
 import {PlusIcon} from "@heroicons/react/24/outline";
 import {ToastContainer, toast} from 'react-toastify';
 
@@ -17,8 +17,6 @@ function ViewMode() {
   const navigate = useNavigate();
   const {id} = useParams();
 
-
-  console.log('yellow: ', selectedRule);
 
   function handleCopyRuleset() {
     dispatch(copyRuleSet(selectedRule));

@@ -11,7 +11,7 @@ function AppRoutes(props) {
         <Route>
           <Route path="rules" element={<RootLayout/>}>
             <Route index element={<ViewMode/>}/>
-            <Route path=':id' element={<ViewMode/>}/>
+            {/*<Route path=':id' element={<ViewMode/>}/>*/}
             <Route path='edit/:id' element={<EditMode/>}/>
           </Route>
           <Route

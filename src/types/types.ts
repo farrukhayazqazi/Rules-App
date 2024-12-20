@@ -1,3 +1,5 @@
+import {DRAGGABLE, EDIT_OR_DELETE} from "../data/util.tsx";
+
 export interface RuleSetItem {
   id: number,
   name: string,
@@ -14,8 +16,5 @@ export interface Rule {
   action: string;
 }
 
-export interface ToastDetail {
-  title: string;
-  description: string;
-}
+export type Accessor = keyof Rule | DRAGGABLE | EDIT_OR_DELETE;
 

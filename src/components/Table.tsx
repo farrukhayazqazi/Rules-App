@@ -1,11 +1,27 @@
 import {FaceFrownIcon} from "@heroicons/react/24/outline";
+import {ReactNode, Fragment} from "react";
+import {DRAGGABLE, EDIT_OR_DELETE} from "../data/util.tsx";
 
 interface TableProps<T> {
-  columns: { Header: string; accessor: keyof T }[];
+  columns: { Header: string; accessor: keyof T | DRAGGABLE | EDIT_OR_DELETE }[];
   data: T[];
+  render?: (row: T) => ReactNode;
 }
 
-const Table = <T, >({columns, data}: TableProps<T>) => {
+interface EditableTableProps<T extends TableProps<T>> {
+  renderEditableRows: (rowIndex: number, rowId: number) => ReactNode;
+  editableKeyCheck: string | keyof T;
+}
+
+function renderTableBody(column, row) {
+  if (column?.render) {
+    return column.render(row);
+  }
+  return row[column.accessor];
+}
+
+function Table<T, >({columns, data, editableKeyCheck, renderEditableRows}: TableProps<T> | EditableTableProps<T>) {
+
   return (
     <div className="overflow-x-auto">
       {data?.length ? <table className="min-w-full divide-y divide-gray-200">
@@ -21,14 +37,20 @@ const Table = <T, >({columns, data}: TableProps<T>) => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
         {data?.map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {columns.map((column) => (
-              <td key={column.accessor as string} className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                {row[column.accessor]}
-              </td>
-            ))}
-          </tr>
-        ))}
+            <Fragment key={row.id}>
+              {row?.[editableKeyCheck] ?
+                renderEditableRows(rowIndex, row.id)
+                :
+                (<tr key={row.id}>
+                  {columns.map((column) => (
+                    <td key={column.accessor as string} className="p-4 whitespace-nowrap text-sm text-gray-900">
+                      {renderTableBody(column, row)}
+                    </td>
+                  ))}
+                </tr>)}
+            </Fragment>
+          )
+        )}
         </tbody>
       </table> : (
         <div className="flex items-center justify-center gap-x-2 text-neutral-700 my-44 italic">
