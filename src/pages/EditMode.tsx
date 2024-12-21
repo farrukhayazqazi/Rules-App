@@ -14,7 +14,7 @@ import {
   deleteRule,
   changeRuleEditState,
   setEditedRuleSetState,
-  updateRuleSetName, saveEditedChanges, resetEditedState
+  updateRuleSetName, saveEditedChanges, resetEditedState, deleteRuleSet
 } from "../store/slice.ts";
 import EditableRuleRow from "../components/EditableRuleRow.tsx";
 
@@ -39,14 +39,11 @@ function EditMode() {
 
 
   useEffect(() => {
-    const editedRuleSet = {...ruleSet};
-    editedRuleSet.rules = editedRuleSet?.rules?.map((rule) => ({...rule, isInEditState: false}));
-    dispatch(setEditedRuleSetState(editedRuleSet));
-
+      dispatch(setEditedRuleSetState(ruleSet));
     return (() => {
       dispatch(resetEditedState())
     })
-  }, []);
+  }, [ruleId]);
 
 
   const editableTableColumnsData: { Header: string, accessor: Accessor, render?: (row: Rule) => ReactElement }[] = [
@@ -78,20 +75,26 @@ function EditMode() {
     dispatch(updateRuleSetName(e.target.value))
   }
 
-  function handleSaveChanges () {
+  function handleSaveChanges() {
+    const isAllRulesValid = editedRuleState.ruleSet.rules.every((rule) => rule.isInEditState === false);
+    if (!isAllRulesValid) {
+      return toast.error('Please complete all required fields before submitting the rule set.')
+    }
     dispatch(saveEditedChanges(editedRuleState?.ruleSet))
     navigate('/rules?ruleUpdate=success');
   }
 
   function handleAddNewRule() {
-    // dispatch(addRuleField());
     dispatch(addNewRule())
   }
 
   function cancelChanges() {
-    // setIsRuleSetEdited(false);
-    // setRuleSetName(ruleSet?.name);
     dispatch(setEditedRuleSetState(ruleSet));
+  }
+
+  function handleRuleSetDeletion() {
+    dispatch(deleteRuleSet(ruleSet));
+    navigate('/rules?ruleDeletion=success');
   }
 
 
@@ -102,16 +105,18 @@ function EditMode() {
         <div
           className="w-full flex flex-col items-center space-y-4 sm:flex-row sm:space-y-0 sm:border-r sm:border-neutral-300">
           <input
+            // defaultValue={editedRuleState?.ruleSet?.name}
             className="w-full px-4 py-2 border border-neutral-200 rounded-md focus:outline-none sm:w-[36rem] sm:mr-20"
             placeholder='ruleset name here...'
-            // value={ruleSetName}
             value={editedRuleState?.ruleSet?.name}
             onChange={handleInputChange}
           />
 
           <button
             onClick={handleSaveChanges}
-            className="w-full bg-sky-500 text-sky-100 px-4 py-2 rounded hover:bg-sky-600 shrink-0 sm:w-fit sm:mr-8"
+            className={`w-full bg-sky-500 text-sky-100 px-4 py-2 rounded hover:bg-sky-600 shrink-0 
+            sm:w-fit sm:mr-8 disabled:bg-neutral-400 disabled:hover:bg-neutral-400`}
+            disabled={!editedRuleState.canSaveChanges}
           >
             Save Changes
           </button>
@@ -141,7 +146,7 @@ function EditMode() {
           </button>
 
           <button
-            // onClick={() => navigate(`/rules/edit/${id ?? selectedRule.id}`)}
+            onClick={handleRuleSetDeletion}
             className="w-full bg-red-600 text-red-50 px-4 py-2 rounded hover:bg-red-700 shrink-0 sm:w-fit"
           >
             Delete RuleSet

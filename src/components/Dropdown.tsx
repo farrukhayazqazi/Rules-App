@@ -24,7 +24,7 @@ function Dropdown(props: DropdownProps) {
     <DropdownMenu.Root >
       <DropdownMenu.Trigger
         className="w-full flex items-center justify-between px-4 py-2 border border-neutral-200 rounded-md sm:w-96">
-        {selectedItem}
+        {selectedItem ?? 'Choose a rule set'}
         <ChevronDownIcon className="h-5 w-5"/>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>

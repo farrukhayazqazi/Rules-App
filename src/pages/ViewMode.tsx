@@ -47,10 +47,10 @@ function ViewMode() {
     <div>
       <div className="flex flex-col items-center space-y-4 gap-x-8 py-8 sm:flex-row sm:space-y-0">
         <Dropdown
-          selectedItem={selectedRule.name}
+          selectedItem={selectedRule?.name}
           handleSelectedOption={handleDropdownSelection}
           getItemName='name'
-          items={rulesSet}
+          items={rulesSet ?? []}
           renderItemProps={{
             item: () => renderItem,
             position: 'end',
@@ -58,22 +58,26 @@ function ViewMode() {
           }}
         />
 
-        <button
-          onClick={() => navigate(`/rules/edit/${id ?? selectedRule.id}`)}
-          className="w-full bg-neutral-200 text-neutral-600 px-4 py-2 rounded hover:bg-neutral-300 shrink-0 sm:w-fit"
-        >
-          Edit Rules
-        </button>
+        {selectedRule && (
+          <>
+            <button
+              onClick={() => navigate(`/rules/edit/${id ?? selectedRule?.id}`)}
+              className="w-full bg-neutral-200 text-neutral-600 px-4 py-2 rounded hover:bg-neutral-300 shrink-0 sm:w-fit"
+            >
+              Edit Rules
+            </button>
 
-        <button
-          onClick={handleCopyRuleset}
-          className="w-full bg-sky-500 text-sky-100 px-4 py-2 rounded hover:bg-sky-600 shrink-0 sm:w-fit"
-        >
-          Copy Ruleset
-        </button>
+            <button
+              onClick={handleCopyRuleset}
+              className="w-full bg-sky-500 text-sky-100 px-4 py-2 rounded hover:bg-sky-600 shrink-0 sm:w-fit"
+            >
+              Copy Ruleset
+            </button>
+          </>)
+        }
       </div>
 
-      <Table<Rule> data={selectedRule.rules} columns={columns}/>
+      <Table<Rule> data={selectedRule?.rules} columns={columns}/>
       <ToastContainer/>
     </div>
   );

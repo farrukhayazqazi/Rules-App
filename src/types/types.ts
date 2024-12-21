@@ -17,7 +17,7 @@ export interface Rule {
 }
 
 export interface EditableRule extends Rule {
-  isInEditableState: Boolean;
+  isInEditState: Boolean;
 }
 
 export interface EditableRuleSetItem extends Omit<RuleSetItem, 'rules'> {
