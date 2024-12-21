@@ -1,4 +1,3 @@
-import {Squares2X2Icon} from "@heroicons/react/24/solid";
 import {CheckIcon, XMarkIcon} from "@heroicons/react/24/outline";
 import {useDispatch, useSelector} from "react-redux";
 import {cancelEditingRule, editRule} from "../store/slice.ts";
@@ -18,7 +17,7 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const el = document.getElementById('editable-row');
+    const el = document.getElementById(`editable-row-${rowId}`);
     el.scrollIntoView({behavior: 'smooth'});
   }, []);
 
@@ -38,9 +37,8 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
   }
 
 
-
   return (
-    <tr id='editable-row' key={rowId}>
+    <tr id={`editable-row-${rowId}`} key={rowId}>
       <td className="p-4 whitespace-nowrap text-sm text-neutral-900"/>
 
       <td className="p-4 whitespace-nowrap text-sm text-neutral-900">

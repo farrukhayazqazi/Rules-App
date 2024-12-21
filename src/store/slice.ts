@@ -98,6 +98,11 @@ const rulesSlice = createSlice({
         state.editedRuleSetState.canSaveChanges = true;
       }
     },
+    updateEditedRuleSetRulesOrder(state, action: PayloadAction<EditableRule[]>){
+      state.editedRuleSetState.ruleSet.rules = action.payload;
+      state.editedRuleSetState.stateEdited = true;
+      state.editedRuleSetState.canSaveChanges = true;
+    },
     saveEditedChanges(state, action: PayloadAction<EditableRuleSetItem>) {
       const ruleSetItem = {...action.payload, rules: action.payload.rules.map(({isInEditState, ...rest}) => rest)}
       const index = state.rulesSet.findIndex((ruleSet) => ruleSet.id === ruleSetItem.id);
@@ -128,6 +133,7 @@ export const {
   deleteRule,
   updateRuleSetName,
   editRule,
+  updateEditedRuleSetRulesOrder,
   saveEditedChanges,
   resetEditedState,
   deleteRuleSet

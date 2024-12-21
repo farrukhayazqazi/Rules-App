@@ -8,6 +8,7 @@ import {ReactElement, useEffect} from "react";
 import {PencilIcon, TrashIcon} from "@heroicons/react/24/outline";
 import {Squares2X2Icon} from "@heroicons/react/24/solid";
 import ConfirmationDialog from "../components/ConfirmationDialogue.tsx";
+import {arrayMove} from "@dnd-kit/sortable";
 import {
   addNewRule,
   deleteRule,
@@ -16,7 +17,7 @@ import {
   updateRuleSetName,
   saveEditedChanges,
   resetEditedState,
-  deleteRuleSet
+  deleteRuleSet, updateEditedRuleSetRulesOrder
 } from "../store/slice.ts";
 import EditableRuleRow from "../components/EditableRuleRow.tsx";
 
@@ -48,13 +49,17 @@ function EditMode() {
   }, [ruleId]);
 
 
-  const editableTableColumnsData: { Header: string, accessor: Accessor, render?: (row: Rule | EditableRule) => ReactElement }[] = [
+  const editableTableColumnsData: {
+      Header: string,
+      accessor: Accessor,
+      render?: (row: Rule | EditableRule) => ReactElement
+    }[] = [
       {
         accessor: DRAGGABLE,
         Header: '',
         render: () => (
-          <div className='cursor-grab' onClick={() => console.log('edit works!')}><Squares2X2Icon
-            className='h-3 w-3 text-neutral-300'/></div>
+          <div className='cursor-grab'><Squares2X2Icon
+            className='h-4 w-4 text-neutral-300'/></div>
         )
       },
       ...columns,
@@ -99,6 +104,15 @@ function EditMode() {
   function handleRuleSetDeletion() {
     dispatch(deleteRuleSet(ruleSet));
     navigate('/rules?ruleDeletion=success');
+  }
+
+  function handleDragEnd(event: DragEvent) {
+    const {active, over} = event;
+    const data: EditableRule[] = editedRuleState?.ruleSet?.rules;
+    const activeIndex = data.findIndex((rule) => rule.id === active.id);
+    const overIndex = data.findIndex((rule) => rule.id === over.id);
+    const updatedRulesetRules = arrayMove(data, activeIndex, overIndex);
+    dispatch(updateEditedRuleSetRulesOrder(updatedRulesetRules))
   }
 
 
@@ -163,6 +177,7 @@ function EditMode() {
         columns={editableTableColumnsData}
         editableKeyCheck='isInEditState'
         renderEditableRows={renderRuleSetForm}
+        handleDragEnd={handleDragEnd}
       />
 
       <ToastContainer/>
