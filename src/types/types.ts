@@ -20,6 +20,8 @@ export interface EditableRule extends Rule {
   isInEditState: Boolean;
 }
 
+export type RuleSetCopy = Record<string, number> | {}
+
 export interface EditableRuleSetItem extends Omit<RuleSetItem, 'rules'> {
   rules: EditableRule[]
 }

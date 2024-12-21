@@ -1,20 +1,22 @@
 import {useNavigate, useParams} from "react-router";
 import Table from "../components/Table.tsx";
-import {Accessor, Rule} from "../types/types.ts";
+import {Accessor, EditableRule, Rule} from "../types/types.ts";
 import {columns, DRAGGABLE, EDIT_OR_DELETE} from "../data/util.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {ToastContainer, toast} from 'react-toastify';
-import {ReactElement, useEffect, useState} from "react";
-import {CheckIcon, PencilIcon, TrashIcon, XMarkIcon} from "@heroicons/react/24/outline";
+import {ReactElement, useEffect} from "react";
+import {PencilIcon, TrashIcon} from "@heroicons/react/24/outline";
 import {Squares2X2Icon} from "@heroicons/react/24/solid";
 import ConfirmationDialog from "../components/ConfirmationDialogue.tsx";
 import {
   addNewRule,
-  cancelEditingRule,
   deleteRule,
   changeRuleEditState,
   setEditedRuleSetState,
-  updateRuleSetName, saveEditedChanges, resetEditedState, deleteRuleSet
+  updateRuleSetName,
+  saveEditedChanges,
+  resetEditedState,
+  deleteRuleSet
 } from "../store/slice.ts";
 import EditableRuleRow from "../components/EditableRuleRow.tsx";
 
@@ -39,37 +41,39 @@ function EditMode() {
 
 
   useEffect(() => {
-      dispatch(setEditedRuleSetState(ruleSet));
+    dispatch(setEditedRuleSetState(ruleSet));
     return (() => {
       dispatch(resetEditedState())
     })
   }, [ruleId]);
 
 
-  const editableTableColumnsData: { Header: string, accessor: Accessor, render?: (row: Rule) => ReactElement }[] = [
-    {
-      accessor: DRAGGABLE,
-      Header: '',
-      render: () => (
-        <div className='cursor-grab' onClick={() => console.log('edit works!')}><Squares2X2Icon
-          className='h-3 w-3 text-neutral-300'/></div>
-      )
-    },
-    ...columns,
-    {
-      accessor: EDIT_OR_DELETE,
-      Header: '',
-      render: (row) => (
-        <div className='flex items-center gap-x-2'>
-          <div className='cursor-pointer' onClick={() => dispatch(changeRuleEditState(row))}><PencilIcon
-            className='h-4 w-4'/>
+  const editableTableColumnsData: { Header: string, accessor: Accessor, render?: (row: Rule | EditableRule) => ReactElement }[] = [
+      {
+        accessor: DRAGGABLE,
+        Header: '',
+        render: () => (
+          <div className='cursor-grab' onClick={() => console.log('edit works!')}><Squares2X2Icon
+            className='h-3 w-3 text-neutral-300'/></div>
+        )
+      },
+      ...columns,
+      {
+        accessor: EDIT_OR_DELETE,
+        Header: '',
+        render: (row) => (
+          <div className='flex items-center gap-x-2'>
+            <div className='cursor-pointer' onClick={() => dispatch(changeRuleEditState(row))}>
+              <PencilIcon className='h-4 w-4'/>
+            </div>
+            <div className='cursor-pointer' onClick={() => dispatch(deleteRule(row))}>
+              <TrashIcon className='h-4 w-4'/>
+            </div>
           </div>
-          <div className='cursor-pointer' onClick={() => dispatch(deleteRule(row))}><TrashIcon className='h-4 w-4'/>
-          </div>
-        </div>
-      )
-    }
-  ];
+        )
+      }
+    ]
+  ;
 
   function handleInputChange(e) {
     dispatch(updateRuleSetName(e.target.value))

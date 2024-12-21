@@ -41,11 +41,7 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
 
   return (
     <tr id='editable-row' key={rowId}>
-      <td className="p-4 whitespace-nowrap text-sm text-neutral-900">
-        <div className='cursor-grab' onClick={() => console.log('edit works!')}>
-          <Squares2X2Icon className='h-3 w-3 text-neutral-300'/>
-        </div>
-      </td>
+      <td className="p-4 whitespace-nowrap text-sm text-neutral-900"/>
 
       <td className="p-4 whitespace-nowrap text-sm text-neutral-900">
         {rowId}
@@ -57,7 +53,6 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
           className="w-full px-4 py-2 border border-neutral-200 rounded-md focus:outline-none max-w-64"
           name='measuremet'
           placeholder='Enter measuremet name'
-          // value={ruleData?.measurement}
           onChange={(e) => handleRuleDataChange(e.target.value, 'measurement')}
         />
       </td>
@@ -68,7 +63,6 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
             defaultValue={""}
             className="w-full px-4 py-2 bg-white border border-neutral-300 rounded-md focus:outline-none"
             name="comparator"
-            // value={ruleData?.comparator}
             onChange={(e) => {
               handleRuleDataChange(e.target.value, 'comparator');
             }}
@@ -98,14 +92,12 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
             className="w-full px-4 py-2 border border-neutral-200 rounded-l-md focus:outline-none max-w-64"
             name='comparator_copy_2'
             placeholder='Compared field'
-            // value={ruleData?.comparator}
           />
           <div className='w-fit'>
             <select
               defaultValue={ruleData?.unitName}
               className='px-4 py-[9px] border border-neutral-300 border-l-0 rounded-r-md focus:outline-none'
               name='unit'
-              // value={ruleData?.unitName}
               onChange={(e) => {
                 handleRuleDataChange(e.target.value, 'unitName')
               }}
@@ -126,7 +118,6 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
           className="w-full px-4 py-2 border border-neutral-200 rounded-md focus:outline-none max-w-64"
           name='findingName'
           placeholder='Enter Findings name'
-          // value={ruleData?.findingName}
           onChange={(e) => {
             handleRuleDataChange(e.target.value, 'findingName')
           }}
@@ -139,7 +130,6 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
             defaultValue={ruleData?.action}
             className='px-4 py-2 border border-neutral-300 rounded-md focus:outline-none'
             name='action'
-            // value={ruleData?.action}
             onChange={(e) => {
               handleRuleDataChange(e.target.value, 'action')
             }}
