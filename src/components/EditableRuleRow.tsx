@@ -25,15 +25,26 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
     setRuleData({
       ...ruleData,
       [key]: value,
-    })
+    });
   }
 
   function handleRuleEdit() {
-    const isValid = Object.values(ruleData).every((ruleProp) => ruleProp !== '');
+    const updatedRuleData = {...ruleData};
+    if(ruleData?.comparator === 'Is') {
+      updatedRuleData['comparedValue'] = 'Not Present'
+    }
+    const valuesToCheck = Object.entries(updatedRuleData).map(([key, value]) => {
+      if (key === 'unitName' && ruleData?.comparator === 'Is') {
+        return true;
+      }
+      return value;
+    });
+
+    const isValid = valuesToCheck.every((ruleProp) => ruleProp !== '');
     if(!isValid) {
       return toast.error('Please complete all required fields before submitting the rule set.')
     }
-    dispatch(editRule(ruleData))
+    dispatch(editRule(updatedRuleData))
   }
 
 
@@ -42,12 +53,12 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
       <td className="p-4 whitespace-nowrap text-sm text-neutral-900"/>
 
       <td className="p-4 whitespace-nowrap text-sm text-neutral-900">
-        {rowId}
+        {rowId.toString()}
       </td>
 
       <td className="p-4 whitespace-nowrap text-sm text-neutral-900">
         <input
-          defaultValue={ruleData?.measurement}
+          value={ruleData?.measurement}
           className="w-full px-4 py-2 border border-neutral-200 rounded-md focus:outline-none max-w-64"
           name='measuremet'
           placeholder='Enter measuremet name'
@@ -58,7 +69,7 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
       <td className="p-4 whitespace-nowrap text-sm text-neutral-900">
         <div className=" w-fit">
           <select
-            defaultValue={""}
+            value={ruleData?.comparator}
             className="w-full px-4 py-2 bg-white border border-neutral-300 rounded-md focus:outline-none"
             name="comparator"
             onChange={(e) => {
@@ -66,7 +77,7 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
             }}
           >
             <option value="">Select Condition</option>
-            <option value="not present">Is</option>
+            <option value="Is">Is</option>
             <option value=">=">{'>='}</option>
             <option value="<">{`<`}</option>
           </select>
@@ -74,26 +85,28 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
       </td>
 
 
-      {ruleData?.comparator === 'not present' ? (
+      {ruleData?.comparator === 'Is' ? (
           <td className="flex items-center p-4 whitespace-nowrap text-sm text-neutral-900">
             <input
-              className="w-full px-4 py-2 border border-neutral-200 rounded-md focus:outline-none max-w-64 disabled:bg-neutral-100"
-              name='comparator_copy'
-              placeholder='Compared field'
               value='Not Present'
+              name='comparedValue'
+              className="w-full px-4 py-2 border border-neutral-200 rounded-md focus:outline-none max-w-64 disabled:bg-neutral-100"
+              placeholder='Compared field'
               disabled={true}
             />
           </td>) :
         (<td className="flex items-center p-4 whitespace-nowrap text-sm text-neutral-900">
           <input
-            defaultValue={ruleData?.comparator}
+            value={ruleData?.comparedValue ?? 'Not Present'}
             className="w-full px-4 py-2 border border-neutral-200 rounded-l-md focus:outline-none max-w-64"
-            name='comparator_copy_2'
+            name='comparedValue'
             placeholder='Compared field'
+            type="number"
+            onChange={(e) => handleRuleDataChange(e.target.value, 'comparedValue')}
           />
           <div className='w-fit'>
             <select
-              defaultValue={ruleData?.unitName}
+              value={ruleData?.unitName}
               className='px-4 py-[9px] border border-neutral-300 border-l-0 rounded-r-md focus:outline-none'
               name='unit'
               onChange={(e) => {
@@ -101,9 +114,9 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
               }}
             >
               <option value="">Select Unit</option>
-              <option value="u1">Unit 1</option>
-              <option value="u2">Unit 2</option>
-              <option value="u3">Unit 3</option>
+              <option value="ms">ms</option>
+              <option value="hours">hours</option>
+              <option value="sec">sec</option>
             </select>
           </div>
         </td>)
@@ -112,7 +125,7 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
 
       <td className="p-4 whitespace-nowrap text-sm text-neutral-900">
         <input
-          defaultValue={ruleData?.findingName}
+          value={ruleData?.findingName}
           className="w-full px-4 py-2 border border-neutral-200 rounded-md focus:outline-none max-w-64"
           name='findingName'
           placeholder='Enter Findings name'
@@ -125,7 +138,7 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
       <td className="p-4 whitespace-nowrap text-sm text-neutral-900">
         <div className='w-fit'>
           <select
-            defaultValue={ruleData?.action}
+            value={ruleData?.action}
             className='px-4 py-2 border border-neutral-300 rounded-md focus:outline-none'
             name='action'
             onChange={(e) => {
@@ -142,7 +155,8 @@ function EditableRuleRow({rowId, rowIndex}: EditableRuleRowProps) {
       <td className="p-4 whitespace-nowrap text-sm text-neutral-900">
         <div className='flex items-center gap-x-2'>
           <div className='cursor-pointer' onClick={handleRuleEdit}>
-            <CheckIcon className='h-4 w-4'/></div>
+            <CheckIcon className='h-4 w-4'/>
+          </div>
           <div className='cursor-pointer'
                onClick={() => dispatch(cancelEditingRule(ruleData))}>
             <XMarkIcon className='h-4 w-4'/>

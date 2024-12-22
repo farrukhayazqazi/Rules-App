@@ -20,9 +20,7 @@ function ViewMode() {
 
   function handleCopyRuleset() {
     dispatch(copyRuleSet(selectedRule));
-    toast.success('🦄 Copy Created!', {
-      position: "bottom-right",
-    })
+    toast.success('🦄 Copy Created In Dropdown!');
   }
 
   function handleDropdownSelection(item: RuleSetItem) {
@@ -38,9 +36,7 @@ function ViewMode() {
 
   function addNewRule() {
     dispatch(addNewRuleSet())
-    toast.success('🦄 Empty New RuleSet Created!', {
-      position: "bottom-right",
-    })
+    toast.success('🦄 Empty New RuleSet Created!');
   }
 
   return (

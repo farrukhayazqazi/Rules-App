@@ -1,3 +1,7 @@
+
+
+
+
 {
   "ruleSets": [
     {
@@ -72,7 +76,128 @@
           "measurement": "GSV Rt Prox Reflux",
           "comparedValue": 500,
           "action": "Normal"
+        },
+
+
+
+
+        {
+          "id": 110,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 120,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 130,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 140,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 150,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 160,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 170,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 190,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 1005,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 201,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 202,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 2023,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 2024,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
+        },        {
+          "id": 982,
+          "unitName": "ms",
+          "findingName": "aklalnas",
+          "comparator": ">=",
+          "measurement": "GSV Rt Prox Reflux",
+          "comparedValue": 500,
+          "action": "Normal"
         }
+
+
+
+
       ]
     }
   ]

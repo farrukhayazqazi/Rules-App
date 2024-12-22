@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import data from '../data/rule_sets.json';
 import {EditableRule, EditableRuleSetItem, Rule, RuleSetCopy, RuleSetItem} from "../types/types.ts";
-import {nanoid} from 'nanoid'
+import generateUniqueId from 'generate-unique-id';
 
 const rulesSlice = createSlice({
   name: 'rules',
@@ -20,8 +20,11 @@ const rulesSlice = createSlice({
       state.selectedRuleSet = state.rulesSet.filter((rules) => rules.id === action.payload.id)[0];
     },
     addNewRuleSet(state) {
-      const uuid = nanoid();
-      const id = Math.abs(parseInt(uuid, 36) % 10000);
+      const uid = generateUniqueId({
+        useLetters: false,
+        length: 3,
+      });
+      const id = parseInt(uid);
       state.rulesSet = [...state.rulesSet, {
         id,
         name: `Empty_New_Rules_Set`,
@@ -30,8 +33,11 @@ const rulesSlice = createSlice({
       state.selectedRuleSet = state.rulesSet[state.rulesSet.length-1];
     },
     copyRuleSet(state, action: PayloadAction<RuleSetItem>) {
-      const uuid = nanoid();
-      const id = Math.abs(parseInt(uuid, 36) % 10000);
+      const uid = generateUniqueId({
+        useLetters: false,
+        length: 3,
+      });
+      const id = parseInt(uid);
       const count = state.copiesCreated[action.payload.name] ? state.copiesCreated[action.payload.name] + 1 : 1;
       state.copiesCreated[action.payload.name] = count;
       const copiedRuleSet = {id, name: `${action.payload.name}_${count}`, rules: [...action.payload.rules]};
@@ -46,15 +52,17 @@ const rulesSlice = createSlice({
       state.editedRuleSetState.canSaveChanges = false;
     },
     addNewRule(state) {
-      const uuid = nanoid();
-      const id = Math.abs(parseInt(uuid, 36) % 10000);
+      const uid = generateUniqueId({
+        useLetters: false,
+        length: 3,
+      });
+      const id = parseInt(uid);
       const emptyRule = {
         id,
-        // unitName: '',
         findingName: '',
         comparator: '',
         measurement: '',
-        comparedValue: 0,
+        comparedValue: 'Not Present',
         action: '',
         isInEditState: true
       }

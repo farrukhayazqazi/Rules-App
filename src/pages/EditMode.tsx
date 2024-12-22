@@ -123,7 +123,6 @@ function EditMode() {
         <div
           className="w-full flex flex-col items-center space-y-4 sm:flex-row sm:space-y-0 sm:border-r sm:border-neutral-300">
           <input
-            // defaultValue={editedRuleState?.ruleSet?.name}
             className="w-full px-4 py-2 border border-neutral-200 rounded-md focus:outline-none sm:w-[36rem] sm:mr-20"
             placeholder='ruleset name here...'
             value={editedRuleState?.ruleSet?.name}
@@ -163,12 +162,17 @@ function EditMode() {
             Add New Rule
           </button>
 
-          <button
-            onClick={handleRuleSetDeletion}
-            className="w-full bg-red-600 text-red-50 px-4 py-2 rounded hover:bg-red-700 shrink-0 sm:w-fit"
+          <ConfirmationDialog
+            title='Delete RuleSet'
+            description={`Are you sure you want to delete "${editedRuleState?.ruleSet?.name}" rule set?`}
+            handleConfirmChange={handleRuleSetDeletion}
           >
-            Delete RuleSet
-          </button>
+            <button
+              className="w-full bg-red-600 text-red-50 px-4 py-2 rounded hover:bg-red-700 shrink-0 sm:w-fit"
+            >
+              Delete RuleSet
+            </button>
+          </ConfirmationDialog>
         </div>
       </div>
 
@@ -181,21 +185,6 @@ function EditMode() {
       />
 
       <ToastContainer/>
-
-      <dialog className='p-4 rounded-md'>
-        <p className="p-4 text-lg">Are you sure you want to cancel the updated changes?</p>
-
-        <div className="border-t pt-4 text-right">
-          <button
-            onClick={cancelChanges}
-            className="w-full bg-red-600 text-red-50 px-4 py-2 rounded hover:bg-red-700 shrink-0 sm:w-fit"
-          >
-            Confirm
-          </button>
-        </div>
-      </dialog>
-
-
     </div>
   );
 }

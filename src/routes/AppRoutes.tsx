@@ -8,16 +8,14 @@ function AppRoutes(props) {
   return (
     <BrowserRouter>
       <Routes>
-        <Route>
-          <Route path="rules" element={<RootLayout/>}>
-            <Route index element={<ViewMode/>}/>
-            <Route path='edit/:id' element={<EditMode/>}/>
-          </Route>
-          <Route
-            path="*"
-            element={<Navigate to="/rules" replace/>}
-          />
+        <Route path="rules" element={<RootLayout/>}>
+          <Route index element={<ViewMode/>}/>
+          <Route path='edit/:id' element={<EditMode/>}/>
         </Route>
+        <Route
+          path="*"
+          element={<Navigate to="/rules" replace/>}
+        />
       </Routes>
     </BrowserRouter>
   );

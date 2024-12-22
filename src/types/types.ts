@@ -12,7 +12,7 @@ export interface Rule {
   findingName: string;
   comparator: string;
   measurement: string;
-  comparedValue: number,
+  comparedValue: number | 'Not Present',
   action: string;
 }
 
